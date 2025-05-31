@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Med AI - User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --dark-surface: #1e1e1e;
+            --darker-surface: #151515;
+            --primary: #ff3e3e;
+            --primary-dark: #cc0000;
+            --primary-light: #ff7070;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-disabled: #6c6c6c;
+            --success: #4ecca3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .page-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ff3e3e' fill-opacity='0.05'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 20v-1.41l1.41-1.41L0 18.83V20zm20-15V3.17l-1.41-1.41L20 0h1.41l2.83 2.83-1.41 1.41L21.41 5H20zm0 15v-1.41l-1.41-1.41L20 18.83V20zM40 8.83v-1.66l-1.41-1.41-1.41 1.41L38.59 8 40 8.83zM40 20v-1.41l-1.41-1.41L40 18.83V20zM20 40v-1.41l-1.41-1.41L20 38.83V40zm15-15v-1.41l-1.41-1.41L35 23.83V25zm5 5v-1.41l-1.41-1.41L40 28.83V30zm0 10v-1.41l-1.41-1.41L40 38.83V40zm-35 0v-1.41l1.41 1.41L5 38.83V40zM5 30v-1.41l1.41 1.41L5 28.83V30zm10-5v-1.41l1.41 1.41L15 23.83V25z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 62, 62, 0.15) 0%, rgba(18, 18, 18, 0) 60%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--dark-surface);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 62, 62, 0.1) 0%, rgba(255, 62, 62, 0) 100%);
+            z-index: 0;
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 i {
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 62, 62, 0.3);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--dark-surface);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        .card h2 {
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2 i {
+            color: var(--primary);
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--darker-bg);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 62, 62, 0.2);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(255, 62, 62, 0.3);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .personal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: var(--darker-bg);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateX(5px);
+            background-color: rgba(255, 62, 62, 0.1);
+        }
+
+        .info-item i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .info-item strong {
+            color: var(--text-secondary);
+            margin-right: 10px;
+        }
+
+        .info-item span {
+            color: var(--text-primary);
+        }
+
+        .conversation-history {
+            grid-column: span 2;
+        }
+
+        .conversations-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .conversations-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .conversations-container::-webkit-scrollbar-track {
+            background: var(--dark-surface);
+            border-radius: 10px;
+        }
+
+        .conversations-container::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 10px;
+        }
+
+        .conversation {
+            margin-bottom: 25px;
+            background-color: var(--darker-surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .conversations-container .conversation:nth-child(1) { animation-delay: 0.4s; }
+        .conversations-container .conversation:nth-child(2) { animation-delay: 0.5s; }
+        .conversations-container .conversation:nth-child(3) { animation-delay: 0.6s; }
+        .conversations-container .conversation:nth-child(4) { animation-delay: 0.7s; }
+        .conversations-container .conversation:nth-child(5) { animation-delay: 0.8s; }
+
+        .conversation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .conversation-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 12px 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .conversation-date i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        .user-message, .ai-response {
+            padding: 15px;
+        }
+
+        .user-message {
+            background-color: rgba(255, 62, 62, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+
+        .ai-response {
+            background-color: rgba(78, 204, 163, 0.05);
+            border-left: 3px solid var(--success);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .message-header i {
+            margin-right: 8px;
+        }
+
+        .user-message .message-header i {
+            color: var(--primary);
+        }
+
+        .ai-response .message-header i {
+            color: var(--success);
+        }
+
+        .message-content {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Add styles for markdown formatting in conversation history */
+        .message-content strong {
+            font-weight: bold;
+        }
+        
+        .message-content em {
+            font-style: italic;
+        }
+        
+        .message-content ul, .message-content ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .message-content li {
+            margin-bottom: 5px;
+        }
+        
+        .message-content code {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        .message-content a {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+        
+        .message-content table {
+            border-collapse: collapse;
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .message-content th, .message-content td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px;
+        }
+        
+        .message-content th {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .flash-messages {
+            margin-bottom: 25px;
+        }
+
+        .flash-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-color: rgba(78, 204, 163, 0.1);
+            color: var(--text-primary);
+            border-left: 4px solid var(--success);
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .flash-message i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            color: var(--success);
+        }
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .conversation-history {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .header h1 {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-background">
+        <div class="bg-pattern"></div>
+        <div class="bg-gradient"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-md"></i> Med AI - User Profile</h1>
+            <div class="nav-links">
+                <a href="{% url 'home' %}"><i class="fas fa-comment-medical"></i> Chat</a>
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash-message">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="content">
+            <div class="card">
+                <h2><i class="fas fa-id-card"></i> Personal Information</h2>
+                <div class="personal-info">
+                    <div class="info-item">
+                        <i class="fas fa-user"></i>
+                        <strong>Username:</strong>
+                        <span>{{ username }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-notes-medical"></i> Medical Profile</h2>
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" value="{{ profile.age|default_if_none:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="blood_group">Blood Group</label>
+                        <select id="blood_group" name="blood_group">
+                            <option value="" {% if not profile.blood_group %}selected{% endif %}>Select Blood Group</option>
+                            <option value="A+" {% if profile.blood_group == 'A+' %}selected{% endif %}>A+</option>
+                            <option value="A-" {% if profile.blood_group == 'A-' %}selected{% endif %}>A-</option>
+                            <option value="B+" {% if profile.blood_group == 'B+' %}selected{% endif %}>B+</option>
+                            <option value="B-" {% if profile.blood_group == 'B-' %}selected{% endif %}>B-</option>
+                            <option value="AB+" {% if profile.blood_group == 'AB+' %}selected{% endif %}>AB+</option>
+                            <option value="AB-" {% if profile.blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+                            <option value="O+" {% if profile.blood_group == 'O+' %}selected{% endif %}>O+</option>
+                            <option value="O-" {% if profile.blood_group == 'O-' %}selected{% endif %}>O-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" step="0.1" id="height" name="height" value="{{ profile.height|default_if_none:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" step="0.1" id="weight" name="weight" value="{{ profile.weight|default_if_none:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="allergies">Allergies</label>
+                        <textarea id="allergies" name="allergies">{{ profile.allergies|default_if_none:'' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="chronic_conditions">Chronic Conditions</label>
+                        <textarea id="chronic_conditions" name="chronic_conditions">{{ profile.chronic_conditions|default_if_none:'' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="current_medications">Current Medications</label>
+                        <textarea id="current_medications" name="current_medications">{{ profile.current_medications|default_if_none:'' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="previous_surgeries">Previous Surgeries</label>
+                        <textarea id="previous_surgeries" name="previous_surgeries">{{ profile.previous_surgeries|default_if_none:'' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Update Medical Profile
+                    </button>
+                </form>
+            </div>
+
+            <div class="card conversation-history">
+                <h2><i class="fas fa-history"></i> Conversation History</h2>
+                
+                {% if conversations %}
+                    <div class="conversations-container">
+                        {% for conversation in conversations %}
+                            <div class="conversation">
+                                <div class="conversation-date">
+                                    <i class="fas fa-calendar-alt"></i> {{ conversation.timestamp }}
+                                </div>
+                                <div class="user-message">
+                                    <div class="message-header">
+                                        <i class="fas fa-user"></i> You
+                                    </div>
+                                    <div class="message-content">
+                                        {{ conversation.user_message }}
+                                    </div>
+                                </div>
+                                <div class="ai-response">
+                                    <div class="message-header">
+                                        <i class="fas fa-robot"></i> Med AI
+                                    </div>
+                                    <div class="message-content">
+                                        {{ conversation.ai_response }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <p>No conversation history yet.</p>
+                        <a href="{% url 'home' %}" class="btn">
+                            <i class="fas fa-comment-medical"></i> Start Chatting with Med AI
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Convert markdown in AI responses when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Parse markdown in all AI responses
+            const aiResponses = document.querySelectorAll('.ai-response .message-content');
+            aiResponses.forEach(response => {
+                const originalText = response.textContent;
+                response.innerHTML = marked.parse(originalText);
+                
+                // Add target="_blank" to all links for security
+                const links = response.querySelectorAll('a');
+                links.forEach(link => {
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                });
+            });
+            
+            // Add some interactivity to the form elements
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.style.transform = 'translateX(5px)';
+                });
+                
+                input.addEventListener('blur', () => {
+                    input.parentElement.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

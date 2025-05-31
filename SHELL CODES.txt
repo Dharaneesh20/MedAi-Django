@@ -1,0 +1,31 @@
+SHELL CODES
+
+py -3.11 -m venv venv
+venv\Scripts\activate
+pip install --upgrade pip
+pip install google-generativeai
+
+
+# Install requirements in the correct order to avoid dependency conflicts
+pip install sqlparse==0.2.4
+pip install pymongo==3.12.3
+pip install djongo==1.3.6
+pip install Django==3.2.19
+pip install -r requirements.txt
+
+# No need to manually install these now as they're in requirements.txt
+# pip install djongo==1.3.6
+# pip install pytz
+# pip uninstall pymongo
+# pip install pymongo==3.12.3
+# pip uninstall sqlparse
+# pip install sqlparse==0.2.4
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py createsuperuser
+
+# Run the server
+python manage.py runserver
