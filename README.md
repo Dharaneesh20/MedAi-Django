@@ -23,15 +23,26 @@ A Django-based chatbot application powered by Google's Gemini API to provide rel
 
 1️⃣ **Clone the Repository** 🔄  
    ```bash
-   git https://github.com/Dharaneesh20/MedAi.git
+   git clone https://github.com/yourusername/medai-chat.git
    cd medai-chat
    ```
 
 2️⃣ **Create a Virtual Environment and Install Dependencies** 📦
+
+   **Windows:**
    ```bash
    python -m venv venv
+   venv\Scripts\activate
+   ```
+
+   **macOS/Linux:**
+   ```bash
+   python3 -m venv venv
    source venv/bin/activate
+   ```
    
+   **Install Dependencies (All OS):**
+   ```bash
    # Install dependencies in the correct order to avoid conflicts
    pip install sqlparse==0.2.4
    pip install pymongo==3.12.3
@@ -44,45 +55,92 @@ A Django-based chatbot application powered by Google's Gemini API to provide rel
    
    Make sure MongoDB is running on your system. The default connection is to localhost:27017.
    
-   For Ubuntu/Debian:
-   ```bash
-   sudo systemctl start mongodb
+   **Windows:**
+   ```
+   1. Download MongoDB Community Server from the official website
+   2. Run the installer and follow the instructions
+   3. Start MongoDB service:
+      - Go to Services (services.msc)
+      - Find "MongoDB" and start the service
+      - OR from Command Prompt (Admin): net start MongoDB
    ```
    
-   For macOS (with Homebrew):
+   **macOS (with Homebrew):**
    ```bash
+   brew tap mongodb/brew
+   brew install mongodb-community
    brew services start mongodb-community
    ```
    
-   For Windows, start the MongoDB service from Services.
+   **Ubuntu/Debian:**
+   ```bash
+   sudo apt update
+   sudo apt install -y mongodb
+   sudo systemctl start mongodb
+   sudo systemctl enable mongodb
+   ```
+
+   **Fedora:**
+   ```bash
+   sudo dnf install -y mongodb mongodb-server
+   sudo systemctl start mongod
+   sudo systemctl enable mongod
+   ```
+
+   **openSUSE:**
+   ```bash
+   sudo zypper install mongodb
+   sudo systemctl start mongodb
+   sudo systemctl enable mongodb
+   ```
 
 4️⃣ **Configure Environment Variables** 🔐
    
    Copy the `.env.example` file to `.env` and update with your own values:
+   
+   **Windows:**
+   ```bash
+   copy .env.example .env
+   ```
+   
+   **macOS/Linux:**
    ```bash
    cp .env.example .env
-   # Then edit .env with your preferred text editor
    ```
+   
+   Then edit .env with your preferred text editor and add your Google Gemini API key.
 
 5️⃣ **Initialize the Database** 🗃️
+   
+   **All Operating Systems:**
    ```bash
    python init_db.py
    python manage.py migrate
    ```
 
 6️⃣ **Create a Superuser for Admin Access** 👑
+   
+   **All Operating Systems:**
    ```bash
    python manage.py createsuperuser
    ```
+   Follow the prompts to create your admin username, email, and password.
 
 7️⃣ **Run the Application** ▶️
+   
+   **All Operating Systems:**
    ```bash
    python manage.py runserver
    ```
 
 8️⃣ **Access the Chatbot** 🌐
+   Open your browser and navigate to:
    ```
    http://127.0.0.1:8000/
+   ```
+   Admin panel is available at:
+   ```
+   http://127.0.0.1:8000/admin/
    ```
 
 ## 📁 Project Structure
@@ -145,6 +203,13 @@ The application uses three MongoDB collections:
    - ai_response: String
    - timestamp: DateTime
    - query_type: String (medical or non_medical)
+
+## ❓ Troubleshooting
+
+- **MongoDB Connection Issues:** Ensure MongoDB is running and accessible at the configured address/port
+- **API Key Errors:** Verify your Google Gemini API key is correctly set in the .env file
+- **Dependencies Issues:** Try installing dependencies one by one as listed in the installation instructions
+- **Virtual Environment Problems:** If using Python 3.10+, you may need to install the virtualenv package first
 
 ---
 
