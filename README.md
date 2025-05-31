@@ -23,7 +23,7 @@ A Django-based chatbot application powered by Google's Gemini API to provide rel
 
 1️⃣ **Clone the Repository** 🔄  
    ```bash
-   git clone https://github.com/yourusername/medai-chat.git
+   git https://github.com/Dharaneesh20/MedAi.git
    cd medai-chat
    ```
 
