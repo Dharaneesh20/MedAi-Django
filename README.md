@@ -214,3 +214,4 @@ The application uses three MongoDB collections:
 ---
 
 Developed with ❤️ using Django, MongoDB, and Google Gemini API
+Last Updated On : 27-Jul-2025
