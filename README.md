@@ -211,3 +211,7 @@ The application uses three MongoDB collections:
 - **Dependencies Issues:** Try installing dependencies one by one as listed in the installation instructions
 - **Virtual Environment Problems:** If using Python 3.10+, you may need to install the virtualenv package first
 
+---
+
+Developed with ❤️ using Django, MongoDB, and Google Gemini API
+Last Updated On : 27-Jul-2025
