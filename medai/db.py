@@ -2,9 +2,6 @@ from pymongo import MongoClient
 from django.conf import settings
 from datetime import datetime
 
-# MongoDB connection singleton
-_mongo_client = None
-_mongo_db = None
 
 def get_db_connection():
     """Get or create MongoDB connection"""
