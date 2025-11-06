@@ -33,7 +33,7 @@ def init_db():
                 if collection not in collections:
                     print(f"Collection '{collection}' will be created automatically when needed")
             
-            # Create initial indexes for faster queries
+            
             db.users.create_index("username", unique=True)
             db.users.create_index("email", unique=True, sparse=True)
             db.medical_profiles.create_index("user_id", unique=True)
